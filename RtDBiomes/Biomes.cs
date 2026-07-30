@@ -15,6 +15,8 @@ namespace RtDBiomes
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Major)]
     [BepInDependency("com.jotunn.jotunn", BepInDependency.DependencyFlags.HardDependency)]
     [BepInIncompatibility("blacks7ar.SeedBed")]
+    [BepInIncompatibility("randyknapp.mods.epicloot")]
+    [BepInIncompatibility("org.bepinex.plugins.valheim_plus")]
     
     internal partial class RtDBiomes : BaseUnityPlugin
     {
@@ -22,7 +24,7 @@ namespace RtDBiomes
 
         public const string PluginName = "RtDBiomes";
 
-        public const string PluginVersion = "3.1.32";
+        public const string PluginVersion = "3.1.33";
 
         private AssetBundle MyAssets;
 
