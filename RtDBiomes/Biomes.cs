@@ -24,7 +24,7 @@ namespace RtDBiomes
 
         public const string PluginName = "RtDBiomes";
 
-        public const string PluginVersion = "3.1.33";
+        public const string PluginVersion = "3.1.34";
 
         private AssetBundle MyAssets;
 
@@ -470,11 +470,11 @@ namespace RtDBiomes
           "SwampTree6_RtD",
         };
 
-/*        public string[] MountainTreeList = new string[]
+        public string[] MountainTreeList = new string[]
         {
-          "xxx",
-          "xxx"
-        };*/
+            "ThinPine1_RtD",
+            "ThinPine2_RtD"
+        };
 
         public string[] PlainsTreeList = new string[]
         {
@@ -513,8 +513,6 @@ namespace RtDBiomes
 
         public string[] DeepNorthTreeList = new string[]
         {
-          "ThinPine1_RtD",
-          "ThinPine2_RtD",
           "MagicTree3_RtD",
           "MagicTree4_RtD",
           "MagicTree5_RtD"
@@ -948,7 +946,7 @@ namespace RtDBiomes
                 var PineTree1 = ZoneManager.Instance.GetZoneVegetation("Pinetree_01");
                 PineTree1.m_min = 34;
                 PineTree1.m_max = 36;
-                PineTree1.m_biome = Heightmap.Biome.BlackForest | Biome.DeepNorth;
+                PineTree1.m_biome = Heightmap.Biome.BlackForest;
 
                 var DeadTree1 = ZoneManager.Instance.GetZoneVegetation("SwampTree2");
                 DeadTree1.m_groupSizeMin = 0;
@@ -969,26 +967,26 @@ namespace RtDBiomes
                 var PineTree2 = ZoneManager.Instance.GetZoneVegetation("FirTree");
                 PineTree2.m_min = 1;
                 PineTree2.m_max = 1;
-                PineTree2.m_biome = Heightmap.Biome.BlackForest | Biome.Mountain | Biome.DeepNorth;
+                PineTree2.m_biome = Heightmap.Biome.BlackForest | Biome.Mountain;
 
                 var rockBush1 = ZoneManager.Instance.GetZoneVegetation("rock3_mountain");
                 rockBush1.m_max = 2;
-                rockBush1.m_biome = Heightmap.Biome.Mountain | Biome.DeepNorth;
+                rockBush1.m_biome = Heightmap.Biome.Mountain;
 
                 var rockBush2 = ZoneManager.Instance.GetZoneVegetation("rock1_mountain");
                 rockBush2.m_min = 5;
                 rockBush2.m_max = 8;
-                rockBush2.m_biome = Heightmap.Biome.Mountain | Biome.DeepNorth;
+                rockBush2.m_biome = Heightmap.Biome.Mountain;
                 
                 var rockBush3 = ZoneManager.Instance.GetZoneVegetation("rock2_mountain");
                 rockBush3.m_min = 5;
                 rockBush3.m_max = 8;
-                rockBush3.m_biome = Heightmap.Biome.Mountain | Biome.DeepNorth;
+                rockBush3.m_biome = Heightmap.Biome.Mountain;
                 
                 var blackForestBush1 = ZoneManager.Instance.GetZoneVegetation("shrub_2");
                 blackForestBush1.m_min = 70;
                 blackForestBush1.m_max = 80;
-                blackForestBush1.m_biome = Heightmap.Biome.BlackForest | Biome.DeepNorth;
+                blackForestBush1.m_biome = Heightmap.Biome.BlackForest;
 
                 var PlainsBush1 = ZoneManager.Instance.GetZoneVegetation("Bush01_heath");
                 PlainsBush1.m_min = 2;
@@ -1548,7 +1546,7 @@ namespace RtDBiomes
             }
         }
 
-/*        private void MountainTreeConfig()
+        private void MountainTreeConfig()
         {
             try
             {
@@ -1570,7 +1568,7 @@ namespace RtDBiomes
             {
                 Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
             }
-        }*/
+        }
 
         private void PlainsTreeConfig()
         {
