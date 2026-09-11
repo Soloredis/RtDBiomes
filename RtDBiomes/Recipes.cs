@@ -1426,14 +1426,14 @@ namespace RtDBiomes
                 pieceConfig169.PieceTable = PieceTables.Cultivator;
                 pieceConfig169.CraftingStation = CraftingStations.Workbench;
                 pieceConfig169.Category = "Decorative Mushrooms";
-                pieceConfig169.AddRequirement(new RequirementConfig("Wood", 1, 0, true));
+                pieceConfig169.AddRequirement(new RequirementConfig("PlantSeedMistlands_RtD", 1, 0, true));
                 PieceManager.Instance.AddPiece(new CustomPiece(this.MyAssets, "BlueShroom2P_RtD", true, pieceConfig169));
 
                 PieceConfig pieceConfig170 = new PieceConfig();
                 pieceConfig170.PieceTable = PieceTables.Cultivator;
                 pieceConfig170.CraftingStation = CraftingStations.Workbench;
                 pieceConfig170.Category = "Decorative Mushrooms";
-                pieceConfig170.AddRequirement(new RequirementConfig("Wood", 1, 0, true));
+                pieceConfig170.AddRequirement(new RequirementConfig("PlantSeedMistlands_RtD", 1, 0, true));
                 PieceManager.Instance.AddPiece(new CustomPiece(this.MyAssets, "BlueShroom3P_RtD", true, pieceConfig170));
 
                 PieceConfig pieceConfig171 = new PieceConfig();
@@ -1484,21 +1484,21 @@ namespace RtDBiomes
                 pieceConfig177.PieceTable = PieceTables.Cultivator;
                 pieceConfig177.CraftingStation = CraftingStations.Workbench;
                 pieceConfig177.Category = "Decorative Mushrooms";
-                pieceConfig177.AddRequirement(new RequirementConfig("Wood", 1, 0, true));
+                pieceConfig177.AddRequirement(new RequirementConfig("PlantSeedAshLands_RtD", 1, 0, true));
                 PieceManager.Instance.AddPiece(new CustomPiece(this.MyAssets, "RedShroom2P_RtD", true, pieceConfig177));
 
                 PieceConfig pieceConfig178 = new PieceConfig();
                 pieceConfig178.PieceTable = PieceTables.Cultivator;
                 pieceConfig178.CraftingStation = CraftingStations.Workbench;
                 pieceConfig178.Category = "Decorative Mushrooms";
-                pieceConfig178.AddRequirement(new RequirementConfig("Wood", 1, 0, true));
+                pieceConfig178.AddRequirement(new RequirementConfig("PlantSeedAshLands_RtD", 1, 0, true));
                 PieceManager.Instance.AddPiece(new CustomPiece(this.MyAssets, "RedShroom3P_RtD", true, pieceConfig178));
 
                 PieceConfig pieceConfig179 = new PieceConfig();
                 pieceConfig179.PieceTable = PieceTables.Cultivator;
                 pieceConfig179.CraftingStation = CraftingStations.Workbench;
                 pieceConfig179.Category = "Decorative Mushrooms";
-                pieceConfig179.AddRequirement(new RequirementConfig("Wood", 1, 0, true));
+                pieceConfig179.AddRequirement(new RequirementConfig("PlantSeedAshLands_RtD", 1, 0, true));
                 PieceManager.Instance.AddPiece(new CustomPiece(this.MyAssets, "RedShroom4P_RtD", true, pieceConfig179));
 
                 // Mountain Shrooms
