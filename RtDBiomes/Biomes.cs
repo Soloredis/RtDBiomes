@@ -35,13 +35,6 @@ namespace RtDBiomes
             JSONSupport();
             AddItems();
             AddPrefabs();
-            MeadowsClutterConfig();
-            BlackForestClutterConfig();
-            SwampClutterConfig();
-            PlainsClutterConfig();
-            MistlandsClutterConfig();
-            AshLandsClutterConfig();
-            DeepNorthClutterConfig();
             MeadowsBushConfig();
             BlackForestBushConfig();
             SwampBushConfig();
@@ -65,9 +58,6 @@ namespace RtDBiomes
             
             // Vegetation
             ZoneManager.OnVanillaVegetationAvailable += AdjustVanillaVegetation;
-            
-            // Clutter
-            ZoneManager.OnVanillaClutterAvailable += AdjustVanillaClutter;
             
             // Locations
             ZoneManager.OnVanillaLocationsAvailable += AdjustVanillaLocation;
@@ -262,51 +252,7 @@ namespace RtDBiomes
              "RedPineSmall2_RtD",
              "RedPineSmall3_RtD"
         };
-
-        public string[] MeadowsClutterList = new string[]
-        {
-          "Meadows1_RtD",
-          "Meadows2_RtD"
-        };
-
-        public string[] BlackForestClutterList = new string[]
-        {
-          "BlackForest1_RtD",
-          "BlackForest2_RtD",
-          "BlackForest3_RtD"
-        };
-
-        public string[] SwampClutterList = new string[]
-        {
-          "Swamps1_RtD",
-          "Swamps2_RtD",
-          "SwampPlant_RtD"
-        };
-
-        public string[] PlainsClutterList = new string[]
-        {
-          "Daisy_RtD",
-        };
-
-        public string[] MistlandsClutterList = new string[]
-        {
-          "Mistlands1_RtD",
-          "Mistlands2_RtD",
-          "Mistlands3_RtD"
-        };
-
-        public string[] AshLandsClutterList = new string[]
-        {
-          "DesertGrass1_RtD",
-          "DesertGrass2_RtD"
-        };
-
-        public string[] DeepNorthClutterList = new string[]
-        {
-          "NorthGrass1_RtD",
-          "NorthGrass2_RtD"
-        };
-
+        
         public string[] MeadowsBushList = new string[]
         {
           "MeadowsShroom1_RtD",
@@ -542,128 +488,6 @@ namespace RtDBiomes
             ForestThresholdMax = 1.15f
         };
 
-
-        // Clutter Values
-
-        public static ClutterConfig MeadowsClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 500f,
-            Biome = Biome.Meadows,
-            MaxOceanDepth = 500,
-            MaxTilt = 20f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
-        public static ClutterConfig BlackForestClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 500f,
-            Biome = Biome.BlackForest,
-            MaxOceanDepth = 500,
-            MaxTilt = 20f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
-        public static ClutterConfig SwampClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 0f,
-            MaxAltitude = 500f,
-            Biome = Biome.Swamp,
-            MaxOceanDepth = 500,
-            MaxTilt = 20f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
-        public static ClutterConfig PlainsClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 500f,
-            Biome = Biome.Plains,
-            MaxOceanDepth = 500,
-            MaxTilt = 25f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
-        public static ClutterConfig MistlandsClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 500f,
-            Biome = Biome.Mistlands,
-            MaxOceanDepth = 500,
-            MaxTilt = 35f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
-        public static ClutterConfig AshLandsClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 500f,
-            Biome = Biome.AshLands,
-            MaxOceanDepth = 500,
-            MaxTilt = 35f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
-        public static ClutterConfig DeepNorthClutterValues = new ClutterConfig
-        {
-            Amount = 2,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 500f,
-            Biome = Biome.DeepNorth,
-            MaxOceanDepth = 500,
-            MaxTilt = 35f,
-            TerrainTilt = true,
-            OnUncleared = true,
-            OnCleared = false,
-            Instanced = true,
-            Enabled = true
-        };
-
         // Bush Values
 
         public static VegetationConfig MeadowsBushValues = new VegetationConfig
@@ -752,11 +576,11 @@ namespace RtDBiomes
 
         public static VegetationConfig AshLandsBushValues = new VegetationConfig
         {
-            Min = 1.9f,
-            Max = 2.1f,
-            ScaleMin = 1.4f,
-            ScaleMax = 1.85f,
-            MinAltitude = 1f,
+            Min = 0.1f,
+            Max = 1f,
+            ScaleMin = 1.1f,
+            ScaleMax = 1.25f,
+            MinAltitude = 1.0f,
             Biome = Biome.AshLands,
             MaxTilt = 50f,
             MaxTerrainDelta = 3f,
@@ -1088,61 +912,6 @@ namespace RtDBiomes
                 ZoneManager.OnVanillaVegetationAvailable -= AdjustVanillaVegetation;
             }
         }
-
-        private void AdjustVanillaClutter()
-        {
-            try
-            {
-                var MeadowsGrass1 = ZoneManager.Instance.GetClutter("grass green");
-                MeadowsGrass1.m_enabled = true;
-                MeadowsGrass1.m_amount = 35;
-
-                var MeadowsGrass2 = ZoneManager.Instance.GetClutter("grass green short");
-                MeadowsGrass2.m_enabled = true;
-                MeadowsGrass2.m_amount = 35;
-
-                var BlackForestGrass1 = ZoneManager.Instance.GetClutter("forest groundcover short brown");
-                BlackForestGrass1.m_enabled = true;
-                BlackForestGrass1.m_amount = 35;
-
-                var BlackForestGrass2 = ZoneManager.Instance.GetClutter("forest groundcover");
-                BlackForestGrass2.m_enabled = true;
-                BlackForestGrass2.m_amount = 35;
-
-                var SwampsGrass1 = ZoneManager.Instance.GetClutter("swampgrass");
-                SwampsGrass1.m_enabled = true;
-                SwampsGrass1.m_amount = 35;
-
-                var PlainsGrass1 = ZoneManager.Instance.GetClutter("heath grass");
-                PlainsGrass1.m_enabled = true;
-                PlainsGrass1.m_amount = 20;
-
-                var PlainsGrass2 = ZoneManager.Instance.GetClutter("heath grass green");
-                PlainsGrass2.m_enabled = true;
-                PlainsGrass2.m_amount = 20;
-                
-                var MistlandsGrass1 = ClutterSystem.instance.m_clutter.Find(c => c.m_prefab != null && c.m_prefab.name == "instanced_mistlands_grass_short");
-                MistlandsGrass1.m_enabled = true;
-                MistlandsGrass1.m_amount = 35;
-
-                var MistlandsGrass2 = ClutterSystem.instance.m_clutter.Find(c => c.m_prefab != null && c.m_prefab.name == "instanced_mistlands_rockplant");
-                MistlandsGrass2.m_enabled = true;
-                MistlandsGrass2.m_amount = 35;
-
-                var AshlandsGrass1 = ClutterSystem.instance.m_clutter.Find(c => c.m_prefab != null && c.m_prefab.name == "instanced_ashlands_grass");
-                AshlandsGrass1.m_enabled = true;
-                AshlandsGrass1.m_amount = 35;
-
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding configuration values: {arg}");
-            }
-            finally
-            {
-                ZoneManager.OnVanillaClutterAvailable -= AdjustVanillaClutter;
-            }
-        }
         
         private void AdjustVanillaLocation()
         {
@@ -1150,6 +919,46 @@ namespace RtDBiomes
             {
                 var TormentMonument = ZoneManager.Instance.GetZoneLocation("CharredStone_Spawner");
                 TormentMonument.m_enable = false;
+                
+                var FortressRuins = ZoneManager.Instance.GetZoneLocation("FortressRuins");
+                FortressRuins.m_enable = true;
+                FortressRuins.m_quantity = 70;
+                
+                var CharredRuins = ZoneManager.Instance.GetZoneLocation("CharredRuins1");
+                CharredRuins.m_enable = true;
+                CharredRuins.m_quantity = 50;
+                
+                var RunestoneAshlands = ZoneManager.Instance.GetZoneLocation("Runestone_Ashlands");
+                RunestoneAshlands.m_enable = true;
+                RunestoneAshlands.m_quantity = 50;
+                
+                var LeviathanLava = ZoneManager.Instance.GetZoneLocation("LeviathanLava");
+                LeviathanLava.m_enable = true;
+                LeviathanLava.m_quantity = 72;
+                
+                var SulfurArch = ZoneManager.Instance.GetZoneLocation("SulfurArch");
+                SulfurArch.m_enable = true;
+                SulfurArch.m_quantity = 70;
+                
+                var VoltureNest = ZoneManager.Instance.GetZoneLocation("VoltureNest");
+                VoltureNest.m_enable = true;
+                VoltureNest.m_quantity = 190;
+                
+                var AshlandRuins = ZoneManager.Instance.GetZoneLocation("AshlandRuins");
+                AshlandRuins.m_enable = true;
+                AshlandRuins.m_quantity = 65;
+                
+                var CharredRuins2 = ZoneManager.Instance.GetZoneLocation("CharredRuins2");
+                CharredRuins2.m_enable = true;
+                CharredRuins2.m_quantity = 65;
+                
+                var CharredRuins3 = ZoneManager.Instance.GetZoneLocation("CharredRuins3");
+                CharredRuins3.m_enable = true;
+                CharredRuins3.m_quantity = 65;
+                
+                var CharredRuins4 = ZoneManager.Instance.GetZoneLocation("CharredRuins4");
+                CharredRuins4.m_enable = true;
+                CharredRuins4.m_quantity = 65;
             }
             catch (Exception arg)
             {
@@ -1211,174 +1020,6 @@ namespace RtDBiomes
             }
         }
 
-        private void MeadowsClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MeadowsClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, MeadowsClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void BlackForestClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in BlackForestClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, BlackForestClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void SwampClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in SwampClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, SwampClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void PlainsClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in PlainsClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, PlainsClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void MistlandsClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MistlandsClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, MistlandsClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void AshLandsClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in AshLandsClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, AshLandsClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void DeepNorthClutterConfig()
-        {
-            try
-            {
-                foreach (string prefabName in DeepNorthClutterList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomClutter(new CustomClutter(prefab, true, DeepNorthClutterValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Clutter: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
         private void MeadowsBushConfig()
         {
             try
@@ -1394,7 +1035,7 @@ namespace RtDBiomes
                     else
                     {
                         Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
+                    
                 }
             }
             catch (Exception arg)
