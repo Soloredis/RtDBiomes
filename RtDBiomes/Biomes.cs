@@ -21,7 +21,7 @@ namespace RtDBiomes
 
         public const string PluginName = "RtDBiomes";
 
-        public const string PluginVersion = "3.1.41";
+        public const string PluginVersion = "3.1.46";
 
         private AssetBundle MyAssets;
 
@@ -63,11 +63,14 @@ namespace RtDBiomes
             AddSaplings();
             CreateRecipes();
             
+            // Vegetation
+            ZoneManager.OnVanillaVegetationAvailable += AdjustVanillaVegetation;
+            
             // Clutter
             ZoneManager.OnVanillaClutterAvailable += AdjustVanillaClutter;
-
-            // Vegetation
-            ZoneManager.OnVanillaLocationsAvailable += AdjustVanillaVegetation;
+            
+            // Locations
+            ZoneManager.OnVanillaLocationsAvailable += AdjustVanillaLocation;
 
             if (LoggingEnable.Value)
                 Logger.LogWarning("Logging is enabled in the config.");
@@ -593,18 +596,6 @@ namespace RtDBiomes
             Enabled = true
         };
 
-/*        public static ClutterConfig MountainClutterValues = new ClutterConfig
-        {
-            Amount = 8,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            MaxAltitude = 1f,
-            Biome = Biome.Mountain,
-            MaxTilt = 30f,
-            TerrainTilt = true,
-        };*/
-
         public static ClutterConfig PlainsClutterValues = new ClutterConfig
         {
             Amount = 2,
@@ -1006,6 +997,86 @@ namespace RtDBiomes
                 var MistlandsTree3 = ZoneManager.Instance.GetZoneVegetation("YggaShoot3");
                 MistlandsTree3.m_max = 2;
                 MistlandsTree3.m_biome = Heightmap.Biome.Mistlands;
+                
+                var AshLandsObject1 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands3_Arch_1");
+                AshLandsObject1.m_max = 2;
+                AshLandsObject1.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject2 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands5");
+                AshLandsObject2.m_max = 3;
+                AshLandsObject2.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject3 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands6");
+                AshLandsObject3.m_max = 3;
+                AshLandsObject3.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject4 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands4");
+                AshLandsObject4.m_max = 1;
+                AshLandsObject4.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject5 = ZoneManager.Instance.GetZoneVegetation("AshlandsTree1");
+                AshLandsObject5.m_max = 6;
+                AshLandsObject5.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject6 = ZoneManager.Instance.GetZoneVegetation("AshlandsTree3");
+                AshLandsObject6.m_max = 6;
+                AshLandsObject6.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject7 = ZoneManager.Instance.GetZoneVegetation("AshlandsTree6");
+                AshLandsObject7.m_max = 2;
+                AshLandsObject7.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject8 = ZoneManager.Instance.GetZoneVegetation("Ashlands_rock2");
+                AshLandsObject8.m_max = 1;
+                AshLandsObject8.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject9 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands6");
+                AshLandsObject9.m_max = 100;
+                AshLandsObject9.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject10 = ZoneManager.Instance.GetZoneVegetation("AshlandsBranch1");
+                AshLandsObject10.m_max = 3;
+                AshLandsObject10.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject11 = ZoneManager.Instance.GetZoneVegetation("AshlandsBranch2");
+                AshLandsObject11.m_max = 2;
+                AshLandsObject11.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject12 = ZoneManager.Instance.GetZoneVegetation("AshlandsBranch3");
+                AshLandsObject12.m_max = 2;
+                AshLandsObject12.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject13 = ZoneManager.Instance.GetZoneVegetation("AshlandsBush1");
+                AshLandsObject13.m_max = 6;
+                AshLandsObject13.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject14 = ZoneManager.Instance.GetZoneVegetation("Pickable_Charredskull");
+                AshLandsObject14.m_max = 25;
+                AshLandsObject14.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject15 = ZoneManager.Instance.GetZoneVegetation("Pickable_Pot_Shard");
+                AshLandsObject15.m_max = 4;
+                AshLandsObject15.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject16 = ZoneManager.Instance.GetZoneVegetation("Pickable_Ashstone");
+                AshLandsObject16.m_max = 9;
+                AshLandsObject16.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject17 = ZoneManager.Instance.GetZoneVegetation("GraveStone_Broken_World");
+                AshLandsObject17.m_max = 4;
+                AshLandsObject17.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject18 = ZoneManager.Instance.GetZoneVegetation("Ashlands_ArchRoofDamaged");
+                AshLandsObject18.m_max = 3;
+                AshLandsObject18.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject19 = ZoneManager.Instance.GetZoneVegetation("Ashlands_Pillar4");
+                AshLandsObject19.m_max = 3;
+                AshLandsObject19.m_biome = Heightmap.Biome.AshLands;
+
+                var AshLandsObject20 = ZoneManager.Instance.GetZoneVegetation("Ashlands_Ruins_Wall_Windows_Broken_4x6");
+                AshLandsObject20.m_max = 3;
+                AshLandsObject20.m_biome = Heightmap.Biome.AshLands;
 
             }
             catch (Exception arg)
@@ -1014,7 +1085,7 @@ namespace RtDBiomes
             }
             finally
             {
-                ZoneManager.OnVanillaLocationsAvailable -= AdjustVanillaClutter;
+                ZoneManager.OnVanillaVegetationAvailable -= AdjustVanillaVegetation;
             }
         }
 
@@ -1049,6 +1120,18 @@ namespace RtDBiomes
                 var PlainsGrass2 = ZoneManager.Instance.GetClutter("heath grass green");
                 PlainsGrass2.m_enabled = true;
                 PlainsGrass2.m_amount = 20;
+                
+                var MistlandsGrass1 = ClutterSystem.instance.m_clutter.Find(c => c.m_prefab != null && c.m_prefab.name == "instanced_mistlands_grass_short");
+                MistlandsGrass1.m_enabled = true;
+                MistlandsGrass1.m_amount = 35;
+
+                var MistlandsGrass2 = ClutterSystem.instance.m_clutter.Find(c => c.m_prefab != null && c.m_prefab.name == "instanced_mistlands_rockplant");
+                MistlandsGrass2.m_enabled = true;
+                MistlandsGrass2.m_amount = 35;
+
+                var AshlandsGrass1 = ClutterSystem.instance.m_clutter.Find(c => c.m_prefab != null && c.m_prefab.name == "instanced_ashlands_grass");
+                AshlandsGrass1.m_enabled = true;
+                AshlandsGrass1.m_amount = 35;
 
             }
             catch (Exception arg)
@@ -1058,6 +1141,23 @@ namespace RtDBiomes
             finally
             {
                 ZoneManager.OnVanillaClutterAvailable -= AdjustVanillaClutter;
+            }
+        }
+        
+        private void AdjustVanillaLocation()
+        {
+            try
+            {
+                var TormentMonument = ZoneManager.Instance.GetZoneLocation("CharredStone_Spawner");
+                TormentMonument.m_enable = false;
+            }
+            catch (Exception arg)
+            {
+                Logger.LogWarning($"Exception caught while adding configuration values: {arg}");
+            }
+            finally
+            {
+                ZoneManager.OnVanillaLocationsAvailable -= AdjustVanillaLocation;
             }
         }
         
