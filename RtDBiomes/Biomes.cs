@@ -1035,7 +1035,7 @@ namespace RtDBiomes
                     else
                     {
                         Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    
+                    }
                 }
             }
             catch (Exception arg)
