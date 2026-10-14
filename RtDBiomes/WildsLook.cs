@@ -272,6 +272,7 @@ namespace RtDBiomes
             {
                 var cs = ClutterSystem.instance;
                 if (!cs) return "no ClutterSystem yet";
+                if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null) return "dedicated server, grass is only drawn on clients";
                 if (!WildsGrassEnable.Value) return "Wilds Grass is off in the config";
                 var clutterList = cs.m_clutter;
                 int rebuilt = rebuild ? clutterList.RemoveAll(IsWildsGrass) : 0;
@@ -291,14 +292,20 @@ namespace RtDBiomes
                 }
 
                 int added = 0;
+                var missing = new HashSet<string>();
                 if (!clutterList.Exists(IsWildsGrass))
                 {
                     float slope = WildsMistlandsMaxSlope.Value;
                     foreach (var data in WildsClutterList)
                     {
-                        if (!prefabs.TryGetValue(data.Prefab, out var prefab))
+                        if (!prefabs.TryGetValue(data.Prefab, out var prefab) || !prefab)
                         {
-                            Logger.LogWarning("Wilds grass: clutter prefab not found: " + data.Prefab);
+                            prefab = PrefabManager.Cache.GetPrefab<GameObject>(data.Prefab);
+                            if (prefab) prefabs[data.Prefab] = prefab;
+                        }
+                        if (!prefab)
+                        {
+                            missing.Add(data.Prefab);
                             continue;
                         }
                         var clutter = data.Create(prefab);
@@ -325,6 +332,9 @@ namespace RtDBiomes
                         added++;
                     }
                 }
+
+                if (missing.Count > 0)
+                    Logger.LogWarning("Wilds grass: skipped grass that is not loaded yet: " + string.Join(", ", missing));
 
                 if (stripped == 0 && added == 0) return "already applied, nothing to change";
 

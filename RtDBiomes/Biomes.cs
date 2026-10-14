@@ -21,7 +21,7 @@ namespace RtDBiomes
 
         public const string PluginName = "RtDBiomes";
 
-        public const string PluginVersion = "3.2.0";
+        public const string PluginVersion = "3.2.1";
 
         private AssetBundle MyAssets;
 
@@ -121,6 +121,8 @@ namespace RtDBiomes
           "fx_goblinking_meteor_hit_RtD",
           "fx_goblinking_nova_RtD",
           "ThinPineStump",
+          "ThinPine1_RtD",
+          "ThinPine2_RtD",
           "PineWoodHalf",
           "PineWoodLog",
           "CottonWoodStump",
@@ -424,12 +426,6 @@ namespace RtDBiomes
           "SwampTree6_RtD",
         };
 
-        public string[] MountainTreeList = new string[]
-        {
-            "ThinPine1_RtD",
-            "ThinPine2_RtD"
-        };
-
         public string[] PlainsTreeList = new string[]
         {
           "Acacia1_RtD",
@@ -689,20 +685,6 @@ namespace RtDBiomes
             GroupSizeMax = 2
         };
 
-        public static VegetationConfig MountainTreeValues = new VegetationConfig
-        {
-            Min = 1f,
-            Max = 5f,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
-            MinAltitude = 1f,
-            Biome = Biome.Mountain,
-            MaxTilt = 30f,
-            MaxTerrainDelta = 3f,
-            GroupSizeMin = 1,
-            GroupSizeMax = 2
-        };
-
         public static VegetationConfig PlainsTreeValues = new VegetationConfig
         {
             Min = 0.1f,
@@ -872,19 +854,14 @@ namespace RtDBiomes
                 rockBush3.m_biome = Heightmap.Biome.Mountain;
 
                 var blackForestBush1 = ZoneManager.Instance.GetZoneVegetation("shrub_2");
-                blackForestBush1.m_min = 70;
-                blackForestBush1.m_max = 80;
+                blackForestBush1.m_min = 40;
+                blackForestBush1.m_max = 45;
                 blackForestBush1.m_biome = Heightmap.Biome.BlackForest;
 
                 var PlainsBush1 = ZoneManager.Instance.GetZoneVegetation("Bush01_heath");
                 PlainsBush1.m_min = 2;
                 PlainsBush1.m_max = 4;
                 PlainsBush1.m_biome = Heightmap.Biome.Plains;
-
-                var PlainsBush2 = ZoneManager.Instance.GetZoneVegetation("shrub_2");
-                PlainsBush2.m_min = 40;
-                PlainsBush2.m_max = 45;
-                PlainsBush2.m_biome = Heightmap.Biome.BlackForest;
 
                 var MistlandsTree1 = ZoneManager.Instance.GetZoneVegetation("YggaShoot1");
                 MistlandsTree1.m_max = 2;
@@ -905,10 +882,6 @@ namespace RtDBiomes
                 var AshLandsObject2 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands5");
                 AshLandsObject2.m_max = 3;
                 AshLandsObject2.m_biome = Heightmap.Biome.AshLands;
-
-                var AshLandsObject3 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands6");
-                AshLandsObject3.m_max = 3;
-                AshLandsObject3.m_biome = Heightmap.Biome.AshLands;
 
                 var AshLandsObject4 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands4");
                 AshLandsObject4.m_max = 1;
@@ -1001,14 +974,6 @@ namespace RtDBiomes
                 var DeepNorthObject6 = ZoneManager.Instance.GetZoneVegetation("Pinetree_Snow_dead");
                 DeepNorthObject6.m_max = 24;
                 DeepNorthObject6.m_biome = Heightmap.Biome.DeepNorth;
-
-                var DeepNorthObject7 = ZoneManager.Instance.GetZoneVegetation("Pinetree_Snow");
-                DeepNorthObject7.m_max = 15;
-                DeepNorthObject7.m_biome = Heightmap.Biome.DeepNorth;
-
-                var DeepNorthObject8 = ZoneManager.Instance.GetZoneVegetation("SnowFirTree_small");
-                DeepNorthObject8.m_max = 25;
-                DeepNorthObject8.m_biome = Heightmap.Biome.DeepNorth;
 
                 var DeepNorthObject9 = ZoneManager.Instance.GetZoneVegetation("SnowFirTree_small");
                 DeepNorthObject9.m_max = 12;
@@ -1168,8 +1133,6 @@ namespace RtDBiomes
         private void BlackForestTreeConfig() => AddVegetationList(BlackForestTreeList, BlackForestTreeValues);
 
         private void SwampTreeConfig() => AddVegetationList(SwampTreeList, SwampTreeValues);
-
-        private void MountainTreeConfig() => AddVegetationList(MountainTreeList, MountainTreeValues);
 
         private void PlainsTreeConfig() => AddVegetationList(PlainsTreeList, PlainsTreeValues);
 
