@@ -625,7 +625,6 @@ namespace RtDBiomes
             public float MaxAltitude = 10000f;
             public float MinOceanDepth;
             public float MaxOceanDepth;
-            public float MinVegetation;
             public float MaxVegetation;
             public float MinTilt;
             public float MaxTilt = 90f;
@@ -642,7 +641,6 @@ namespace RtDBiomes
             public float ForestThresholdMin = 0f;
             public float ForestThresholdMax = 1f;
             public float MinDistanceFromCenter;
-            public float MaxDistanceFromCenter;
 
             public ZoneSystem.ZoneVegetation Create(GameObject prefab) => new ZoneSystem.ZoneVegetation
             {
@@ -663,7 +661,6 @@ namespace RtDBiomes
                 m_maxAltitude = MaxAltitude,
                 m_minOceanDepth = MinOceanDepth,
                 m_maxOceanDepth = MaxOceanDepth,
-                m_minVegetation = MinVegetation,
                 m_maxVegetation = MaxVegetation,
                 m_minTilt = MinTilt,
                 m_maxTilt = MaxTilt,
@@ -679,8 +676,7 @@ namespace RtDBiomes
                 m_inForest = InForest,
                 m_forestTresholdMin = ForestThresholdMin,
                 m_forestTresholdMax = ForestThresholdMax,
-                m_minDistanceFromCenter = MinDistanceFromCenter,
-                m_maxDistanceFromCenter = MaxDistanceFromCenter
+                m_minDistanceFromCenter = MinDistanceFromCenter
             };
         }
 
@@ -695,22 +691,18 @@ namespace RtDBiomes
             public bool OnCleared;
             public float ScaleMin = 1f;
             public float ScaleMax = 1f;
-            public float MinTilt;
             public float MaxTilt = 10f;
             public float MinAltitude = -1000f;
             public float MaxAltitude = 10000f;
-            public float MinVegetation;
             public float MaxVegetation;
             public bool SnapToWater;
             public bool TerrainTilt;
             public float RandomOffset;
-            public float MinOceanDepth;
             public float MaxOceanDepth;
             public bool InForest;
             public float ForestThresholdMin = 0f;
             public float ForestThresholdMax = 1f;
             public float FractalScale;
-            public float FractalOffset;
             public float FractalThresholdMin;
             public float FractalThresholdMax = 1f;
 
@@ -726,22 +718,18 @@ namespace RtDBiomes
                 m_onCleared = OnCleared,
                 m_scaleMin = ScaleMin,
                 m_scaleMax = ScaleMax,
-                m_minTilt = MinTilt,
                 m_maxTilt = MaxTilt,
                 m_minAlt = MinAltitude,
                 m_maxAlt = MaxAltitude,
-                m_minVegetation = MinVegetation,
                 m_maxVegetation = MaxVegetation,
                 m_snapToWater = SnapToWater,
                 m_terrainTilt = TerrainTilt,
                 m_randomOffset = RandomOffset,
-                m_minOceanDepth = MinOceanDepth,
                 m_maxOceanDepth = MaxOceanDepth,
                 m_inForest = InForest,
                 m_forestTresholdMin = ForestThresholdMin,
                 m_forestTresholdMax = ForestThresholdMax,
                 m_fractalScale = FractalScale,
-                m_fractalOffset = FractalOffset,
                 m_fractalTresholdMin = FractalThresholdMin,
                 m_fractalTresholdMax = FractalThresholdMax
             };
