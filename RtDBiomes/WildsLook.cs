@@ -61,6 +61,46 @@ namespace RtDBiomes
         };
         private ConfigEntry<float> WildsMistlandsExtraGrass;
 
+        private class WildsBiomeSettings
+        {
+            public Biome Biome;
+            public ConfigEntry<float> Density;
+            public ConfigEntry<float> TreeScaleMin;
+            public ConfigEntry<float> TreeScaleMax;
+            public ConfigEntry<float> MaxSlope;
+            public ConfigEntry<float> MaxTerrainDelta;
+            public ConfigEntry<float> GrassAmount;
+        }
+
+        private static readonly Biome[] WildsTunableBiomes =
+        {
+            Biome.Meadows, Biome.BlackForest, Biome.Swamp, Biome.Mountain, Biome.Plains, Biome.AshLands, Biome.DeepNorth
+        };
+
+        private readonly List<WildsBiomeSettings> wildsBiomeSettings = new List<WildsBiomeSettings>();
+
+        private readonly Dictionary<ZoneSystem.ZoneVegetation, Vector2> wildsOriginalLimits =
+            new Dictionary<ZoneSystem.ZoneVegetation, Vector2>();
+
+        internal static readonly HashSet<string> WildsTreePrefabs = new HashSet<string>
+        {
+            "Beech1", "Beech_small1", "Beech_small2", "Birch1", "Birch2", "Oak1",
+            "FirTree", "FirTree_small", "FirTree_small_dead", "Pinetree_01", "SwampTree1",
+            "AshlandsTree1", "AshlandsTree3", "AshlandsTree6",
+            "Pinetree_Snow", "Pinetree_Snow_dead", "SnowFirTree", "SnowFirTree 2", "SnowFirTree_small",
+            "ForestTree1_RtD", "Oak1_RtD", "Oak2_RtD",
+            "RedPine_RtD", "RedPine1_RtD", "RedPine2_RtD", "RedPine3_RtD", "RedPine4_RtD",
+            "WinterPine3_RtD", "WinterPine4_RtD", "WinterPine5_RtD", "ThinPine1_RtD", "ThinPine2_RtD",
+            "SwampTree1_RtD", "SwampTree2_RtD", "SwampTree3_RtD", "SwampTree4_RtD", "SwampTree5_RtD", "SwampTree6_RtD",
+            "MagicTree2_RtD", "MagicTree3_RtD", "MagicTree4_RtD", "MagicTree5_RtD", "MagicTree6_RtD",
+            "MagicTree7_RtD", "MagicTree8_RtD", "MagicTree9_RtD", "MagicTree10_RtD",
+            "Acacia1_RtD", "Acacia2_RtD", "Acacia3_RtD", "Acacia4_RtD", "PalmTree1_RtD", "PalmTree2_RtD",
+            "DeadTree1_RtD", "DeadTree2_RtD", "DeadTree3_RtD", "DeadTree4_RtD", "DeadTree5_RtD",
+            "DeadTree6_RtD", "DeadTree7_RtD", "DeadTree8_RtD", "DeadTree9_RtD",
+            "Blossom1_RtD", "Blossom2_RtD", "Blossom3_RtD", "Blossom4_RtD", "Blossom5_RtD",
+            "WillowTree1_RtD", "WillowTree2_RtD", "CottonWood1_RtD", "CottonWood2_RtD"
+        };
+
         internal static readonly HashSet<string> WildsMistlandsExtraGrassPrefabs = new HashSet<string>
         {
             "instanced_meadows_grass_short", "instanced_ormbunke", "instanced_forest_groundcover"
@@ -148,6 +188,34 @@ namespace RtDBiomes
                 "1 = same as your Wilds files. Visual only, applies on next world load.", new AcceptableValueRange<float>(0f, 2f),
                 new ConfigurationManagerAttributes { IsAdminOnly = false }));
 
+            foreach (var biome in WildsTunableBiomes)
+            {
+                string section = "Wilds Look - " + biome;
+                wildsBiomeSettings.Add(new WildsBiomeSettings
+                {
+                    Biome = biome,
+                    Density = Config.Bind(section, "Density", 1f, new ConfigDescription(
+                        $"With Wilds Vegetation on: multiplies how many Wilds trees, bushes and rocks spawn in {biome}. " +
+                        "Ores and pickables kept by Keep Vanilla Resources and the RtD plants from Biomes.cs are not affected. 1 = unchanged.",
+                        new AcceptableValueRange<float>(0f, 4f), new ConfigurationManagerAttributes { IsAdminOnly = true })),
+                    TreeScaleMin = Config.Bind(section, "Tree Scale Min", 1f, new ConfigDescription(
+                        $"With Wilds Vegetation on: smallest size of the trees in {biome} (Wilds and RtD trees), compared to their normal size. 1 = unchanged.",
+                        new AcceptableValueRange<float>(0.25f, 4f), new ConfigurationManagerAttributes { IsAdminOnly = true })),
+                    TreeScaleMax = Config.Bind(section, "Tree Scale Max", 1f, new ConfigDescription(
+                        $"With Wilds Vegetation on: largest size of the trees in {biome} (Wilds and RtD trees), compared to their normal size. 1 = unchanged.",
+                        new AcceptableValueRange<float>(0.25f, 4f), new ConfigurationManagerAttributes { IsAdminOnly = true })),
+                    MaxSlope = Config.Bind(section, "Max Slope", 0f, new ConfigDescription(
+                        $"With Wilds Vegetation on: lets plants in {biome} grow on slopes up to this angle. 0 = unchanged.",
+                        new AcceptableValueRange<float>(0f, 90f), new ConfigurationManagerAttributes { IsAdminOnly = true })),
+                    MaxTerrainDelta = Config.Bind(section, "Max Terrain Delta", 0f, new ConfigDescription(
+                        $"With Wilds Vegetation on: lets plants in {biome} grow on bumpier ground, up to this value. 0 = unchanged.",
+                        new AcceptableValueRange<float>(0f, 20f), new ConfigurationManagerAttributes { IsAdminOnly = true })),
+                    GrassAmount = Config.Bind(section, "Grass Amount", 1f, new ConfigDescription(
+                        $"With Wilds Grass on: multiplies the Wilds grass and ground cover in {biome}. Visual only, applies instantly. 1 = unchanged.",
+                        new AcceptableValueRange<float>(0f, 3f), new ConfigurationManagerAttributes { IsAdminOnly = false }))
+                });
+            }
+
             WildsGrassEnable = Config.Bind("Wilds Look", "Wilds Grass", true, new ConfigDescription(
                 "Replace vanilla grass and ground cover in the land biomes with the Expand World Wilds versions. " +
                 "Visual only, takes effect on next world load.", null,
@@ -155,6 +223,8 @@ namespace RtDBiomes
 
             EventHandler regrass = (s, e) => { if (ClutterSystem.instance) ApplyWildsGrass("config", rebuild: true); };
             WildsMistlandsExtraGrass.SettingChanged += regrass;
+            foreach (var settings in wildsBiomeSettings)
+                settings.GrassAmount.SettingChanged += regrass;
 
             ZoneManager.OnVanillaVegetationAvailable += CaptureVanillaVegetation;
             ZoneManager.OnVegetationRegistered += ApplyWildsVegetation;
@@ -187,6 +257,9 @@ namespace RtDBiomes
                 }
             }
         }
+
+        private WildsBiomeSettings[] WildsSettingsFor(Biome biome) =>
+            wildsBiomeSettings.Where(s => (biome & s.Biome) != 0).ToArray();
 
         private static bool IsWildsGrass(ClutterSystem.Clutter c) =>
             c != null && c.m_name != null && c.m_name.EndsWith(WildsClutterSuffix);
@@ -234,6 +307,19 @@ namespace RtDBiomes
                             clutter.m_maxTilt = Mathf.Max(clutter.m_maxTilt, slope + 5f);
                             if (WildsMistlandsExtraGrassPrefabs.Contains(data.Prefab))
                                 clutter.m_amount = Mathf.RoundToInt(clutter.m_amount * WildsMistlandsExtraGrass.Value);
+                        }
+                        else
+                        {
+                            var biomeSettings = WildsSettingsFor(clutter.m_biome);
+                            if (biomeSettings.Length > 0)
+                            {
+                                float grassAmount = biomeSettings.Max(b => b.GrassAmount.Value);
+                                if (grassAmount != 1f)
+                                    clutter.m_amount = Mathf.RoundToInt(clutter.m_amount * grassAmount);
+                                float grassSlope = biomeSettings.Max(b => b.MaxSlope.Value);
+                                if (grassSlope > 0f)
+                                    clutter.m_maxTilt = Mathf.Max(clutter.m_maxTilt, grassSlope + 5f);
+                            }
                         }
                         clutterList.Add(clutter);
                         added++;
@@ -387,6 +473,16 @@ namespace RtDBiomes
                         veg.m_min *= density;
                         veg.m_max *= density;
                     }
+                    else if (!WildsKeepVanillaPrefabs.Contains(data.Prefab))
+                    {
+                        var biomeSettings = WildsSettingsFor(veg.m_biome);
+                        if (biomeSettings.Length > 0)
+                        {
+                            float biomeDensity = biomeSettings.Max(b => b.Density.Value);
+                            veg.m_min *= biomeDensity;
+                            veg.m_max *= biomeDensity;
+                        }
+                    }
                     ZoneSystem.instance.m_vegetation.Add(veg);
                     added++;
                 }
@@ -426,6 +522,50 @@ namespace RtDBiomes
                         scaled++;
                     }
                 }
+
+                int biomeRelaxed = 0, biomeScaled = 0;
+                foreach (var veg in ZoneSystem.instance.m_vegetation)
+                {
+                    if (veg == null || !veg.m_enable) continue;
+                    var land = veg.m_biome & WildsLandBiomes;
+                    if (land == 0 || land == Biome.Mistlands) continue;
+                    var biomeSettings = WildsSettingsFor(land);
+                    if (biomeSettings.Length == 0) continue;
+                    string name = veg.m_prefab ? veg.m_prefab.name : veg.m_name;
+                    if (WildsKeepVanillaPrefabs.Contains(name)) continue;
+
+                    if (!wildsOriginalLimits.TryGetValue(veg, out var limits))
+                    {
+                        limits = new Vector2(veg.m_maxTilt, veg.m_maxTerrainDelta);
+                        wildsOriginalLimits[veg] = limits;
+                    }
+                    float biomeSlope = biomeSettings.Max(b => b.MaxSlope.Value);
+                    float biomeDelta = biomeSettings.Max(b => b.MaxTerrainDelta.Value);
+                    veg.m_maxTilt = Mathf.Max(limits.x, biomeSlope);
+                    veg.m_maxTerrainDelta = Mathf.Max(limits.y, biomeDelta);
+                    if (biomeSlope > limits.x || biomeDelta > limits.y) biomeRelaxed++;
+
+                    if (WildsTreePrefabs.Contains(name))
+                    {
+                        if (!wildsOriginalTreeScale.TryGetValue(veg, out var original))
+                        {
+                            original = new Vector2(veg.m_scaleMin, veg.m_scaleMax);
+                            wildsOriginalTreeScale[veg] = original;
+                        }
+                        float scaleMin = biomeSettings.Max(b => b.TreeScaleMin.Value);
+                        float scaleMax = biomeSettings.Max(b => b.TreeScaleMax.Value);
+                        veg.m_scaleMin = original.x * scaleMin;
+                        veg.m_scaleMax = original.y * scaleMax;
+                        if (scaleMin != 1f || scaleMax != 1f) biomeScaled++;
+                    }
+                }
+
+                var changedBiomes = wildsBiomeSettings
+                    .Where(b => b.Density.Value != 1f || b.TreeScaleMin.Value != 1f || b.TreeScaleMax.Value != 1f || b.MaxSlope.Value > 0f || b.MaxTerrainDelta.Value > 0f)
+                    .Select(b => $"{b.Biome} (density {b.Density.Value}, trees {b.TreeScaleMin.Value}-{b.TreeScaleMax.Value}x, slope {b.MaxSlope.Value}, delta {b.MaxTerrainDelta.Value})")
+                    .ToList();
+                Logger.LogInfo("Wilds biome settings: " + (changedBiomes.Count > 0 ? string.Join("; ", changedBiomes) : "all at default") +
+                               $". Resized {biomeScaled} tree entries, loosened slope limits on {biomeRelaxed} entries.");
 
                 Logger.LogInfo($"Wilds vegetation: removed {stripped} vanilla entries from land biomes, " +
                                $"kept {lightened} Mistlands rock/shoot entries at a lighter amount, added {added} Wilds entries, " +
