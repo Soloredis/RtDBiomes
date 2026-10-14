@@ -229,6 +229,7 @@ namespace RtDBiomes
             ZoneManager.OnVanillaVegetationAvailable += CaptureVanillaVegetation;
             ZoneManager.OnVegetationRegistered += ApplyWildsVegetation;
             ZoneManager.OnVanillaClutterAvailable += ApplyWildsClutter;
+            ZoneManager.OnClutterRegistered += CaptureModClutter;
 
             StartCoroutine(WildsGrassWatcher());
 
@@ -264,7 +265,28 @@ namespace RtDBiomes
         private static bool IsWildsGrass(ClutterSystem.Clutter c) =>
             c != null && c.m_name != null && c.m_name.EndsWith(WildsClutterSuffix);
 
-        private void ApplyWildsClutter() => ApplyWildsGrass("startup");
+        private static readonly HashSet<ClutterSystem.Clutter> wildsClutterBeforeMods = new HashSet<ClutterSystem.Clutter>();
+        private static readonly HashSet<ClutterSystem.Clutter> wildsModClutter = new HashSet<ClutterSystem.Clutter>();
+
+        private static bool IsModClutter(ClutterSystem.Clutter c) => c != null && wildsModClutter.Contains(c);
+
+        private void CaptureModClutter()
+        {
+            var cs = ClutterSystem.instance;
+            if (!cs) return;
+            wildsModClutter.Clear();
+            foreach (var c in cs.m_clutter)
+                if (c != null && !IsWildsGrass(c) && !wildsClutterBeforeMods.Contains(c))
+                    wildsModClutter.Add(c);
+        }
+
+        private void ApplyWildsClutter()
+        {
+            ApplyWildsGrass("startup");
+            wildsClutterBeforeMods.Clear();
+            if (ClutterSystem.instance)
+                wildsClutterBeforeMods.UnionWith(ClutterSystem.instance.m_clutter);
+        }
 
         private string ApplyWildsGrass(string reason, bool rebuild = false)
         {
@@ -285,7 +307,7 @@ namespace RtDBiomes
                 int stripped = 0;
                 foreach (var c in clutterList)
                 {
-                    if (c == null || IsWildsGrass(c) || (c.m_biome & WildsLandBiomes) == 0) continue;
+                    if (c == null || IsWildsGrass(c) || IsModClutter(c) || (c.m_biome & WildsLandBiomes) == 0) continue;
                     c.m_biome &= ~WildsLandBiomes;
                     if (c.m_biome == Biome.None) c.m_enabled = false;
                     stripped++;
@@ -367,7 +389,7 @@ namespace RtDBiomes
             if (!cs) return "No ClutterSystem right now.";
             var list = cs.m_clutter;
             int wilds = list.Count(IsWildsGrass);
-            var vanillaLand = list.Where(c => c != null && !IsWildsGrass(c) && c.m_enabled && (c.m_biome & WildsLandBiomes) != 0)
+            var vanillaLand = list.Where(c => c != null && !IsWildsGrass(c) && !IsModClutter(c) && c.m_enabled && (c.m_biome & WildsLandBiomes) != 0)
                                   .Select(c => (c.m_prefab ? c.m_prefab.name : c.m_name) + " [" + c.m_biome + "]").ToList();
             string status = $"ClutterSystem #{cs.GetInstanceID()}: {list.Count} entries, {wilds} Wilds entries, " +
                    $"{vanillaLand.Count} vanilla entries still active in land biomes" +
