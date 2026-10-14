@@ -1084,7 +1084,7 @@ namespace RtDBiomes
             }
         }
 
-        private void AddVegetationList(string[] prefabList, VegetationConfig values)
+        private void AddVegetationList(string[] prefabList, VegetationConfig values, float maxLavaMask = 0f)
         {
             try
             {
@@ -1093,7 +1093,13 @@ namespace RtDBiomes
                     GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
                     if (prefab != null)
                     {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, values));
+                        CustomVegetation vegetation = new CustomVegetation(prefab, true, values);
+                        if (maxLavaMask > 0f)
+                        {
+                            vegetation.Vegetation.m_minVegetation = 0f;
+                            vegetation.Vegetation.m_maxVegetation = maxLavaMask;
+                        }
+                        ZoneManager.Instance.AddCustomVegetation(vegetation);
                         if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
                     }
                     else
@@ -1124,7 +1130,7 @@ namespace RtDBiomes
 
         private void MistlandsShroomConfig() => AddVegetationList(MistlandsShroomList, MistlandsShroomValues);
 
-        private void AshLandsBushConfig() => AddVegetationList(AshLandsBushList, AshLandsBushValues);
+        private void AshLandsBushConfig() => AddVegetationList(AshLandsBushList, AshLandsBushValues, 0.15f);
 
         private void DeepNorthBushConfig() => AddVegetationList(DeepNorthBushList, DeepNorthBushValues);
 
@@ -1142,7 +1148,7 @@ namespace RtDBiomes
 
         private void MistlandsBlossomConfig() => AddVegetationList(MistlandsBlossomList, MistlandsBlossomValues);
 
-        private void AshLandsTreeConfig() => AddVegetationList(AshLandsTreeList, AshLandsTreeValues);
+        private void AshLandsTreeConfig() => AddVegetationList(AshLandsTreeList, AshLandsTreeValues, 0.2f);
 
         private void DeepNorthTreeConfig() => AddVegetationList(DeepNorthTreeList, DeepNorthTreeValues);
 
