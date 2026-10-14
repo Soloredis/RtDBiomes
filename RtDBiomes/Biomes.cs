@@ -11,17 +11,17 @@ using static Heightmap;
 
 namespace RtDBiomes
 {
-    [BepInPlugin(PluginGUID, PluginName, PluginVersion)] 
+    [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Major)]
     [BepInDependency("com.jotunn.jotunn", BepInDependency.DependencyFlags.HardDependency)]
-    
+
     internal partial class RtDBiomes : BaseUnityPlugin
     {
         public const string PluginGUID = "soloredis.rtdbiomes";
 
         public const string PluginName = "RtDBiomes";
 
-        public const string PluginVersion = "3.1.46";
+        public const string PluginVersion = "3.1.49";
 
         private AssetBundle MyAssets;
 
@@ -31,6 +31,7 @@ namespace RtDBiomes
         {
             LoadBundle();
             CreateConfigs();
+            SetupWildsLook();
             Localizations();
             JSONSupport();
             AddItems();
@@ -41,13 +42,16 @@ namespace RtDBiomes
             MountainBushConfig();
             PlainsBushConfig();
             MistlandsBushConfig();
+            MistlandsShroomConfig();
             AshLandsBushConfig();
             DeepNorthBushConfig();
             MeadowsTreeConfig();
             BlackForestTreeConfig();
             SwampTreeConfig();
             PlainsTreeConfig();
+            PlainsPalmConfig();
             MistlandsTreeConfig();
+            MistlandsBlossomConfig();
             AshLandsTreeConfig();
             DeepNorthTreeConfig();
             VariableTreeList();
@@ -55,17 +59,17 @@ namespace RtDBiomes
             StaticVegetationList();
             AddSaplings();
             CreateRecipes();
-            
+
             // Vegetation
             ZoneManager.OnVanillaVegetationAvailable += AdjustVanillaVegetation;
-            
+
             // Locations
             ZoneManager.OnVanillaLocationsAvailable += AdjustVanillaLocation;
 
             if (LoggingEnable.Value)
                 Logger.LogWarning("Logging is enabled in the config.");
         }
-        
+
         private void LoadBundle()
         {
             if (MyAssets != null) return;
@@ -103,7 +107,7 @@ namespace RtDBiomes
                 Logger.LogWarning($"Exception caught while adding configuration values: {arg}");
             }
         }
-        
+
         // Prefab List
 
         public string[] PrefabList = new string[]
@@ -252,7 +256,7 @@ namespace RtDBiomes
              "RedPineSmall2_RtD",
              "RedPineSmall3_RtD"
         };
-        
+
         public string[] MeadowsBushList = new string[]
         {
           "MeadowsShroom1_RtD",
@@ -321,7 +325,7 @@ namespace RtDBiomes
 
           "AshLandsBush3_RtD",
           "AshLandsBush4_RtD",
-    
+
           "PlainsBush4_RtD",
           "PlainsBush5_RtD",
           "PlainsBush6_RtD",
@@ -329,7 +333,7 @@ namespace RtDBiomes
           "PlainsBush8_RtD"
         };
 
-        public string[] MistlandsBushList = new string[]
+        public string[] MistlandsShroomList = new string[]
         {
           "BlueShroom1_RtD",
           "BlueShroom2_RtD",
@@ -338,7 +342,11 @@ namespace RtDBiomes
           "YellowShroom1_RtD",
           "YellowShroom2_RtD",
           "YellowShroom3_RtD",
-          "YellowShroom4_RtD",
+          "YellowShroom4_RtD"
+        };
+
+        public string[] MistlandsBushList = new string[]
+        {
           "MistLandsBush1_RtD",
           "MistLandsBush2_RtD",
           "MistLandsBush3_RtD",
@@ -427,14 +435,22 @@ namespace RtDBiomes
           "Acacia1_RtD",
           "Acacia2_RtD",
           "Acacia3_RtD",
-          "Acacia4_RtD",
+          "Acacia4_RtD"
+        };
+
+        public string[] PlainsPalmList = new string[]
+        {
           "PalmTree1_RtD",
           "PalmTree2_RtD"
         };
 
         public string[] MistlandsTreeList = new string[]
         {
-          "MagicTree1_RtD",
+          "MagicTree1_RtD"
+        };
+
+        public string[] MistlandsBlossomList = new string[]
+        {
           "Blossom1_RtD",
           "Blossom2_RtD",
           "Blossom3_RtD",
@@ -466,7 +482,6 @@ namespace RtDBiomes
 
         public string[] PlainsRockList = new string[]
         {
-
         };
 
         // Static None Values
@@ -478,6 +493,7 @@ namespace RtDBiomes
             ScaleMin = 1.1f,
             ScaleMax = 1.25f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.None,
             MaxTilt = 30f,
             MaxTerrainDelta = 3f,
@@ -492,11 +508,12 @@ namespace RtDBiomes
 
         public static VegetationConfig MeadowsBushValues = new VegetationConfig
         {
-            Min = 0.9f,
-            Max = 1.5f,
+            Min = 2.7f,
+            Max = 4.5f,
             ScaleMin = 1.1f,
             ScaleMax = 1.85f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Meadows,
             MaxTilt = 30f,
             MaxTerrainDelta = 3f,
@@ -506,11 +523,12 @@ namespace RtDBiomes
 
         public static VegetationConfig BlackForestBushValues = new VegetationConfig
         {
-            Min = 0.5f,
-            Max = 0.9f,
+            Min = 1.5f,
+            Max = 2.7f,
             ScaleMin = 1.1f,
             ScaleMax = 1.85f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.BlackForest,
             MaxTilt = 40f,
             MaxTerrainDelta = 3f,
@@ -520,11 +538,12 @@ namespace RtDBiomes
 
         public static VegetationConfig SwampBushValues = new VegetationConfig
         {
-            Min = 1.1f,
-            Max = 1.5f,
+            Min = 3.3f,
+            Max = 4.5f,
             ScaleMin = 2.1f,
             ScaleMax = 2.8f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Swamp,
             MaxTilt = 20f,
             MaxTerrainDelta = 3f,
@@ -534,11 +553,12 @@ namespace RtDBiomes
 
         public static VegetationConfig MountainBushValues = new VegetationConfig
         {
-            Min = 0.7f,
-            Max = 0.9f,
+            Min = 2.1f,
+            Max = 2.7f,
             ScaleMin = 1.1f,
             ScaleMax = 1.85f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Mountain | Biome.DeepNorth,
             MaxTilt = 30f,
             MaxTerrainDelta = 3f,
@@ -550,12 +570,29 @@ namespace RtDBiomes
         {
             Min = 0.7f,
             Max = 1.1f,
+            ScaleMin = 3.1f,
+            ScaleMax = 3.85f,
+            MinAltitude = 1f,
+            MaxAltitude = 1000f,
+            Biome = Biome.Plains,
+            MaxTilt = 18f,
+            MaxTerrainDelta = 3f,
+            GroupSizeMin = 1,
+            GroupSizeMax = 2
+        };
+
+        public static VegetationConfig MistlandsShroomValues = new VegetationConfig
+        {
+            Min = 0.4f,
+            Max = 0.7f,
             ScaleMin = 1.1f,
             ScaleMax = 1.85f,
             MinAltitude = 1f,
-            Biome = Biome.Plains,
-            MaxTilt = 50f,
-            MaxTerrainDelta = 3f,
+            MaxAltitude = 1000f,
+            Biome = Biome.Mistlands,
+            MaxTilt = 15f,
+            MaxTerrainDelta = 1.5f,
+            GroundOffset = -0.2f,
             GroupSizeMin = 1,
             GroupSizeMax = 2
         };
@@ -567,20 +604,22 @@ namespace RtDBiomes
             ScaleMin = 1.1f,
             ScaleMax = 1.85f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Mistlands,
-            MaxTilt = 50f,
-            MaxTerrainDelta = 3f,
+            MaxTilt = 30f,
+            MaxTerrainDelta = 2f,
             GroupSizeMin = 1,
             GroupSizeMax = 2
         };
 
         public static VegetationConfig AshLandsBushValues = new VegetationConfig
         {
-            Min = 0.1f,
-            Max = 1f,
+            Min = 0.3f,
+            Max = 3f,
             ScaleMin = 1.1f,
             ScaleMax = 1.25f,
             MinAltitude = 1.0f,
+            MaxAltitude = 1000f,
             Biome = Biome.AshLands,
             MaxTilt = 50f,
             MaxTerrainDelta = 3f,
@@ -590,11 +629,12 @@ namespace RtDBiomes
 
         public static VegetationConfig DeepNorthBushValues = new VegetationConfig
         {
-            Min = 0.5f,
-            Max = 1.4f,
+            Min = 1.5f,
+            Max = 3f,
             ScaleMin = 1.3f,
             ScaleMax = 1.85f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.DeepNorth,
             MaxTilt = 30f,
             MaxTerrainDelta = 3f,
@@ -606,11 +646,12 @@ namespace RtDBiomes
 
         public static VegetationConfig MeadowsTreeValues = new VegetationConfig
         {
-            Min = 0.8f,
-            Max = 1.2f,
+            Min = 2.4f,
+            Max = 3.6f,
             ScaleMin = 1.1f,
             ScaleMax = 1.35f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Meadows,
             MaxTilt = 20f,
             MaxTerrainDelta = 3f,
@@ -620,12 +661,13 @@ namespace RtDBiomes
 
         public static VegetationConfig BlackForestTreeValues = new VegetationConfig
         {
-            Min = 2f,
-            Max = 2f,
+            Min = 4.5f,
+            Max = 6f,
             ScaleMin = 1.1f,
             ScaleMax = 1.25f,
             MinAltitude = 1f,
-            Biome = Biome.BlackForest | Biome.Mountain | Biome.DeepNorth,
+            MaxAltitude = 1000f,
+            Biome = Biome.BlackForest | Biome.Mountain,
             MaxTilt = 25f,
             MaxTerrainDelta = 3f,
             GroupSizeMin = 1,
@@ -635,10 +677,11 @@ namespace RtDBiomes
         public static VegetationConfig SwampTreeValues = new VegetationConfig
         {
             Min = 6.8f,
-            Max = 9.2f,    
+            Max = 9.2f,
             ScaleMin = 1.1f,
             ScaleMax = 1.25f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Swamp,
             MaxTilt = 40f,
             MaxTerrainDelta = 3f,
@@ -662,16 +705,33 @@ namespace RtDBiomes
 
         public static VegetationConfig PlainsTreeValues = new VegetationConfig
         {
-            Min = 0.7f,
-            Max = 1.2f,
-            ScaleMin = 1.1f,
-            ScaleMax = 1.25f,
+            Min = 0.1f,
+            Max = 0.35f,
+            ScaleMin = 3.875f,
+            ScaleMax = 4.7f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Plains,
             MaxTilt = 23f,
             MaxTerrainDelta = 3f,
             GroupSizeMin = 1,
             GroupSizeMax = 2
+        };
+
+        public static VegetationConfig PlainsPalmValues = new VegetationConfig
+        {
+            Min = 1.2f,
+            Max = 2.2f,
+            ScaleMin = 2.475f,
+            ScaleMax = 3.7f,
+            MinAltitude = 0.3f,
+            MaxAltitude = 5f,
+            Biome = Biome.Plains,
+            MaxTilt = 23f,
+            MaxTerrainDelta = 3f,
+            GroupSizeMin = 3,
+            GroupSizeMax = 6,
+            GroupRadius = 12f
         };
 
         public static VegetationConfig MistlandsTreeValues = new VegetationConfig
@@ -681,17 +741,33 @@ namespace RtDBiomes
             ScaleMin = 1.1f,
             ScaleMax = 1.25f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.Mistlands,
-            MaxTilt = 75f,
-            MaxTerrainDelta = 3f,
+            MaxTilt = 30f,
+            MaxTerrainDelta = 2f,
             GroupSizeMin = 1,
             GroupSizeMax = 2
         };
 
+        public static VegetationConfig MistlandsBlossomValues = new VegetationConfig
+        {
+            Min = 0.15f,
+            Max = 0.35f,
+            ScaleMin = 1.1f,
+            ScaleMax = 1.25f,
+            MinAltitude = 1f,
+            MaxAltitude = 1000f,
+            Biome = Biome.Mistlands,
+            MaxTilt = 25f,
+            MaxTerrainDelta = 2f,
+            GroupSizeMin = 1,
+            GroupSizeMax = 1
+        };
+
         public static VegetationConfig AshLandsTreeValues = new VegetationConfig
         {
-            Min = 0.1f,
-            Max = 1f,
+            Min = 0.3f,
+            Max = 3f,
             ScaleMin = 1.1f,
             ScaleMax = 1.25f,
             MinAltitude = -0.5f,
@@ -705,11 +781,12 @@ namespace RtDBiomes
 
         public static VegetationConfig DeepNorthTreeValues = new VegetationConfig
         {
-            Min = 0.1f,
-            Max = 1.0f,
-            ScaleMin = 2.65f,
-            ScaleMax = 4.25f,
+            Min = 0.3f,
+            Max = 3f,
+            ScaleMin = 1.65f,
+            ScaleMax = 2.65f,
             MinAltitude = 1f,
+            MaxAltitude = 1000f,
             Biome = Biome.DeepNorth,
             MaxTilt = 38f,
             MaxTerrainDelta = 3f,
@@ -729,12 +806,11 @@ namespace RtDBiomes
             GroupSizeMin = 1,
             GroupSizeMax = 2
         };
-        
+
         private void AdjustVanillaVegetation()
         {
             try
             {
-
                 var BeechTree1 = ZoneManager.Instance.GetZoneVegetation("Beech1");
                 BeechTree1.m_min = 18;
                 BeechTree1.m_max = 22;
@@ -789,12 +865,12 @@ namespace RtDBiomes
                 rockBush2.m_min = 5;
                 rockBush2.m_max = 8;
                 rockBush2.m_biome = Heightmap.Biome.Mountain;
-                
+
                 var rockBush3 = ZoneManager.Instance.GetZoneVegetation("rock2_mountain");
                 rockBush3.m_min = 5;
                 rockBush3.m_max = 8;
                 rockBush3.m_biome = Heightmap.Biome.Mountain;
-                
+
                 var blackForestBush1 = ZoneManager.Instance.GetZoneVegetation("shrub_2");
                 blackForestBush1.m_min = 70;
                 blackForestBush1.m_max = 80;
@@ -821,7 +897,7 @@ namespace RtDBiomes
                 var MistlandsTree3 = ZoneManager.Instance.GetZoneVegetation("YggaShoot3");
                 MistlandsTree3.m_max = 2;
                 MistlandsTree3.m_biome = Heightmap.Biome.Mistlands;
-                
+
                 var AshLandsObject1 = ZoneManager.Instance.GetZoneVegetation("cliff_ashlands3_Arch_1");
                 AshLandsObject1.m_max = 2;
                 AshLandsObject1.m_biome = Heightmap.Biome.AshLands;
@@ -902,60 +978,111 @@ namespace RtDBiomes
                 AshLandsObject20.m_max = 3;
                 AshLandsObject20.m_biome = Heightmap.Biome.AshLands;
 
+                var DeepNorthObject1 = ZoneManager.Instance.GetZoneVegetation("Rock_4_deepnorth");
+                DeepNorthObject1.m_max = 4;
+                DeepNorthObject1.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject2 = ZoneManager.Instance.GetZoneVegetation("Rock_3_deepnorth");
+                DeepNorthObject2.m_max = 3;
+                DeepNorthObject2.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject3 = ZoneManager.Instance.GetZoneVegetation("SnowFirTree");
+                DeepNorthObject3.m_max = 5;
+                DeepNorthObject3.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject4 = ZoneManager.Instance.GetZoneVegetation("SnowFirTree 2");
+                DeepNorthObject4.m_max = 20;
+                DeepNorthObject4.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject5 = ZoneManager.Instance.GetZoneVegetation("Pinetree_Snow");
+                DeepNorthObject5.m_max = 15;
+                DeepNorthObject5.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject6 = ZoneManager.Instance.GetZoneVegetation("Pinetree_Snow_dead");
+                DeepNorthObject6.m_max = 24;
+                DeepNorthObject6.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject7 = ZoneManager.Instance.GetZoneVegetation("Pinetree_Snow");
+                DeepNorthObject7.m_max = 15;
+                DeepNorthObject7.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject8 = ZoneManager.Instance.GetZoneVegetation("SnowFirTree_small");
+                DeepNorthObject8.m_max = 25;
+                DeepNorthObject8.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject9 = ZoneManager.Instance.GetZoneVegetation("SnowFirTree_small");
+                DeepNorthObject9.m_max = 12;
+                DeepNorthObject9.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject10 = ZoneManager.Instance.GetZoneVegetation("stubbe_deepnorth");
+                DeepNorthObject10.m_max = 2;
+                DeepNorthObject10.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject11 = ZoneManager.Instance.GetZoneVegetation("FirTree_oldLog_deepnorth");
+                DeepNorthObject11.m_max = 2;
+                DeepNorthObject11.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject12 = ZoneManager.Instance.GetZoneVegetation("Pickable_Branch_Snow");
+                DeepNorthObject12.m_max = 12;
+                DeepNorthObject12.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject13 = ZoneManager.Instance.GetZoneVegetation("Pickable_Snowball");
+                DeepNorthObject13.m_max = 4;
+                DeepNorthObject13.m_biome = Heightmap.Biome.DeepNorth;
+
+                var DeepNorthObject14 = ZoneManager.Instance.GetZoneVegetation("rock4_coast");
+                DeepNorthObject14.m_max = 5;
+                DeepNorthObject14.m_biome = Heightmap.Biome.DeepNorth;
             }
             catch (Exception arg)
             {
                 Logger.LogWarning($"Exception caught while adding configuration values: {arg}");
             }
-            finally
-            {
-                ZoneManager.OnVanillaVegetationAvailable -= AdjustVanillaVegetation;
-            }
         }
-        
+
         private void AdjustVanillaLocation()
         {
             try
             {
                 var TormentMonument = ZoneManager.Instance.GetZoneLocation("CharredStone_Spawner");
                 TormentMonument.m_enable = false;
-                
+
                 var FortressRuins = ZoneManager.Instance.GetZoneLocation("FortressRuins");
                 FortressRuins.m_enable = true;
                 FortressRuins.m_quantity = 70;
-                
+
                 var CharredRuins = ZoneManager.Instance.GetZoneLocation("CharredRuins1");
                 CharredRuins.m_enable = true;
                 CharredRuins.m_quantity = 50;
-                
+
                 var RunestoneAshlands = ZoneManager.Instance.GetZoneLocation("Runestone_Ashlands");
                 RunestoneAshlands.m_enable = true;
                 RunestoneAshlands.m_quantity = 50;
-                
+
                 var LeviathanLava = ZoneManager.Instance.GetZoneLocation("LeviathanLava");
                 LeviathanLava.m_enable = true;
                 LeviathanLava.m_quantity = 72;
-                
+
                 var SulfurArch = ZoneManager.Instance.GetZoneLocation("SulfurArch");
                 SulfurArch.m_enable = true;
                 SulfurArch.m_quantity = 70;
-                
+
                 var VoltureNest = ZoneManager.Instance.GetZoneLocation("VoltureNest");
                 VoltureNest.m_enable = true;
                 VoltureNest.m_quantity = 190;
-                
+
                 var AshlandRuins = ZoneManager.Instance.GetZoneLocation("AshlandRuins");
                 AshlandRuins.m_enable = true;
                 AshlandRuins.m_quantity = 65;
-                
+
                 var CharredRuins2 = ZoneManager.Instance.GetZoneLocation("CharredRuins2");
                 CharredRuins2.m_enable = true;
                 CharredRuins2.m_quantity = 65;
-                
+
                 var CharredRuins3 = ZoneManager.Instance.GetZoneLocation("CharredRuins3");
                 CharredRuins3.m_enable = true;
                 CharredRuins3.m_quantity = 65;
-                
+
                 var CharredRuins4 = ZoneManager.Instance.GetZoneLocation("CharredRuins4");
                 CharredRuins4.m_enable = true;
                 CharredRuins4.m_quantity = 65;
@@ -964,12 +1091,8 @@ namespace RtDBiomes
             {
                 Logger.LogWarning($"Exception caught while adding configuration values: {arg}");
             }
-            finally
-            {
-                ZoneManager.OnVanillaLocationsAvailable -= AdjustVanillaLocation;
-            }
         }
-        
+
         public void AddPrefabs()
         {
             try
@@ -996,16 +1119,16 @@ namespace RtDBiomes
             }
         }
 
-        private void StaticVegetationList()
+        private void AddVegetationList(string[] prefabList, VegetationConfig values)
         {
             try
             {
-                foreach (string prefabName in StaticNoneList)
+                foreach (string prefabName in prefabList)
                 {
                     GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
                     if (prefab != null)
                     {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, StaticNoneValues));
+                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, values));
                         if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
                     }
                     else
@@ -1020,390 +1143,47 @@ namespace RtDBiomes
             }
         }
 
-        private void MeadowsBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MeadowsBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, MeadowsBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void StaticVegetationList() => AddVegetationList(StaticNoneList, StaticNoneValues);
 
-        private void BlackForestBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in BlackForestBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, BlackForestBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void MeadowsBushConfig() => AddVegetationList(MeadowsBushList, MeadowsBushValues);
 
-        private void SwampBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in SwampBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, SwampBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void BlackForestBushConfig() => AddVegetationList(BlackForestBushList, BlackForestBushValues);
 
-        private void MountainBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MountainBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, MountainBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void SwampBushConfig() => AddVegetationList(SwampBushList, SwampBushValues);
 
-        private void PlainsBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in PlainsBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, PlainsBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void MountainBushConfig() => AddVegetationList(MountainBushList, MountainBushValues);
 
-        private void MistlandsBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MistlandsBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, MistlandsBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void PlainsBushConfig() => AddVegetationList(PlainsBushList, PlainsBushValues);
 
-        private void AshLandsBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in AshLandsBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, AshLandsBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void MistlandsBushConfig() => AddVegetationList(MistlandsBushList, MistlandsBushValues);
 
-        private void DeepNorthBushConfig()
-        {
-            try
-            {
-                foreach (string prefabName in DeepNorthBushList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, DeepNorthBushValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void MistlandsShroomConfig() => AddVegetationList(MistlandsShroomList, MistlandsShroomValues);
 
-        private void MeadowsTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MeadowsTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, MeadowsTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void AshLandsBushConfig() => AddVegetationList(AshLandsBushList, AshLandsBushValues);
 
-        private void BlackForestTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in BlackForestTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, BlackForestTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void DeepNorthBushConfig() => AddVegetationList(DeepNorthBushList, DeepNorthBushValues);
 
-        private void SwampTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in SwampTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, SwampTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void MeadowsTreeConfig() => AddVegetationList(MeadowsTreeList, MeadowsTreeValues);
 
-        private void MountainTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MountainTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, MountainTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void BlackForestTreeConfig() => AddVegetationList(BlackForestTreeList, BlackForestTreeValues);
 
-        private void PlainsTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in PlainsTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, PlainsTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void SwampTreeConfig() => AddVegetationList(SwampTreeList, SwampTreeValues);
 
-        private void MistlandsTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in MistlandsTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, MistlandsTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void MountainTreeConfig() => AddVegetationList(MountainTreeList, MountainTreeValues);
 
-        // Changed to plains
-        private void AshLandsTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in AshLandsTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, AshLandsTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void PlainsTreeConfig() => AddVegetationList(PlainsTreeList, PlainsTreeValues);
 
-        private void PlainsRockConfig()
-        {
-            try
-            {
-                foreach (string prefabName in PlainsRockList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, PlainsRockValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
+        private void PlainsPalmConfig() => AddVegetationList(PlainsPalmList, PlainsPalmValues);
+
+        private void MistlandsTreeConfig() => AddVegetationList(MistlandsTreeList, MistlandsTreeValues);
+
+        private void MistlandsBlossomConfig() => AddVegetationList(MistlandsBlossomList, MistlandsBlossomValues);
+
+        private void AshLandsTreeConfig() => AddVegetationList(AshLandsTreeList, AshLandsTreeValues);
+
+        private void DeepNorthTreeConfig() => AddVegetationList(DeepNorthTreeList, DeepNorthTreeValues);
+
+        private void PlainsRockConfig() => AddVegetationList(PlainsRockList, PlainsRockValues);
 
         private void VariableTreeList()
         {
@@ -1413,12 +1193,13 @@ namespace RtDBiomes
                 GameObject Log1 = MyAssets.LoadAsset<GameObject>("SwampTree2_log_RtD");
                 CustomVegetation CustomLog1 = new(Log1, true, new VegetationConfig
                 {
-
                     Biome = ZoneManager.AnyBiomeOf(Heightmap.Biome.BlackForest, Heightmap.Biome.Swamp),
-                    Max = 1,
+                    Min = 0,
+                    Max = 3,
                     ScaleMin = 1.9f,
                     ScaleMax = 3.0f,
                     MinAltitude = -0.5f,
+                    MaxAltitude = 1000f,
                     MaxTilt = 15f,
                     MinTerrainDelta = 1,
                     MaxTerrainDelta = 3,
@@ -1428,24 +1209,25 @@ namespace RtDBiomes
                 GameObject Log2 = MyAssets.LoadAsset<GameObject>("MagicTree2_RtD");
                 CustomVegetation CustomLog2 = new(Log2, true, new VegetationConfig
                 {
-
                     Biome = ZoneManager.AnyBiomeOf(Heightmap.Biome.Meadows, Heightmap.Biome.BlackForest, Heightmap.Biome.Swamp),
-                    Max = 1,
+                    Min = 0,
+                    Max = 3,
                     ScaleMin = 1.9f,
                     ScaleMax = 3.0f,
                     MinAltitude = -0.5f,
+                    MaxAltitude = 1000f,
                     MaxTilt = 30f,
                     MinTerrainDelta = 1,
                     MaxTerrainDelta = 3,
                 });
                 ZoneManager.Instance.AddCustomVegetation(CustomLog2);
-                
+
                 GameObject Log3 = MyAssets.LoadAsset<GameObject>("WillowTree1_RtD");
                 CustomVegetation CustomLog3 = new(Log3, true, new VegetationConfig
                 {
-
                     Biome = ZoneManager.AnyBiomeOf( Heightmap.Biome.Meadows, Heightmap.Biome.Swamp),
-                    Max = 1,
+                    Min = 0,
+                    Max = 3,
                     ScaleMin = 1.7f,
                     ScaleMax = 2.3f,
                     MinAltitude = -0.5f,
@@ -1455,13 +1237,13 @@ namespace RtDBiomes
                     MaxTerrainDelta = 3,
                 });
                 ZoneManager.Instance.AddCustomVegetation(CustomLog3);
-                
+
                 GameObject Log4 = MyAssets.LoadAsset<GameObject>("WillowTree2_RtD");
                 CustomVegetation CustomLog4 = new(Log4, true, new VegetationConfig
                 {
-
                     Biome = ZoneManager.AnyBiomeOf( Heightmap.Biome.Meadows, Heightmap.Biome.Swamp),
-                    Max = 1,
+                    Min = 0,
+                    Max = 3,
                     ScaleMin = 1.9f,
                     ScaleMax = 3.8f,
                     MinAltitude = -0.5f,
@@ -1471,12 +1253,13 @@ namespace RtDBiomes
                     MaxTerrainDelta = 3,
                 });
                 ZoneManager.Instance.AddCustomVegetation(CustomLog4);
-                
+
                 GameObject Log5 = MyAssets.LoadAsset<GameObject>("CottonWood1_RtD");
                 CustomVegetation CustomLog5 = new(Log5, true, new VegetationConfig
                 {
                     Biome = ZoneManager.AnyBiomeOf( Heightmap.Biome.Meadows, Heightmap.Biome.Swamp),
-                    Max = 1,
+                    Min = 0,
+                    Max = 3,
                     ScaleMin = 1.3f,
                     ScaleMax = 1.9f,
                     MinAltitude = -0.5f,
@@ -1491,7 +1274,8 @@ namespace RtDBiomes
                 CustomVegetation CustomLog6 = new(Log6, true, new VegetationConfig
                 {
                     Biome = ZoneManager.AnyBiomeOf( Heightmap.Biome.Meadows, Heightmap.Biome.Swamp),
-                    Max = 1,
+                    Min = 0,
+                    Max = 3,
                     ScaleMin = 1.5f,
                     ScaleMax = 2.4f,
                     MinAltitude = -0.5f,
@@ -1501,30 +1285,6 @@ namespace RtDBiomes
                     MaxTerrainDelta = 3,
                 });
                 ZoneManager.Instance.AddCustomVegetation(CustomLog6);
-            }
-            catch (Exception arg)
-            {
-                Logger.LogWarning($"Exception caught while adding vegetation: {arg}");
-            }
-        }
-
-        private void DeepNorthTreeConfig()
-        {
-            try
-            {
-                foreach (string prefabName in DeepNorthTreeList)
-                {
-                    GameObject prefab = MyAssets.LoadAsset<GameObject>(prefabName);
-                    if (prefab != null)
-                    {
-                        ZoneManager.Instance.AddCustomVegetation(new CustomVegetation(prefab, true, DeepNorthTreeValues));
-                        if (LoggingEnable.Value) { Logger.LogMessage("Added Vegetation: " + prefabName); }
-                    }
-                    else
-                    {
-                        Logger.LogMessage("Failed to add: " + prefabName + " to the object database");
-                    }
-                }
             }
             catch (Exception arg)
             {
