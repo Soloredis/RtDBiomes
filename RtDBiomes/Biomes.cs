@@ -21,7 +21,7 @@ namespace RtDBiomes
 
         public const string PluginName = "RtDBiomes";
 
-        public const string PluginVersion = "3.2.3";
+        public const string PluginVersion = "3.2.4";
 
         private AssetBundle MyAssets;
 

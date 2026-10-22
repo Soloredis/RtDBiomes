@@ -33,6 +33,12 @@ namespace RtDBiomes
             "RaspberryBush", "BlueberryBush", "CloudberryBush", "LingonberryBush"
         };
 
+        internal static readonly HashSet<string> WildsProgressionPrefabs = new HashSet<string>
+        {
+            "YggdrasilRoot", "YggaShoot_small1", "Birch1_aut", "Birch2_aut",
+            "LargeBone", "LargeBone_half01", "LargeBone_half02"
+        };
+
         internal static readonly HashSet<string> WildsMistlandsRockPrefabs = new HashSet<string>
         {
             "cliff_mistlands1", "cliff_mistlands2", "rock_mistlands1"
@@ -142,9 +148,9 @@ namespace RtDBiomes
                 "0 = none (exact Wilds), 0.25 = a light amount, 1 = vanilla.", new AcceptableValueRange<float>(0f, 1f),
                 new ConfigurationManagerAttributes { IsAdminOnly = true }));
 
-            WildsMistlandsShootAmount = Config.Bind("Wilds Look", "Mistlands Yggdrasil Amount", 0.5f, new ConfigDescription(
-                "With Wilds Vegetation on: how many of the big vanilla Yggdrasil shoots to keep (the source of Yggdrasil wood). " +
-                "0 = none (exact Wilds), 1 = vanilla.", new AcceptableValueRange<float>(0f, 1f),
+            WildsMistlandsShootAmount = Config.Bind("Wilds Look", "Mistlands Yggdrasil Amount", 1f, new ConfigDescription(
+                "With Wilds Vegetation on: amount of the big vanilla Yggdrasil shoots (the source of Yggdrasil wood). " +
+                "1 = vanilla, 2 = twice as many. Never goes below vanilla.", new AcceptableValueRange<float>(1f, 3f),
                 new ConfigurationManagerAttributes { IsAdminOnly = true }));
 
             WildsMistlandsDensity = Config.Bind("Wilds Look", "Mistlands Density", 1.5f, new ConfigDescription(
@@ -455,13 +461,14 @@ namespace RtDBiomes
 
                 bool keepResources = WildsKeepVanillaResources.Value;
                 float rockAmount = Mathf.Clamp01(WildsMistlandsRockAmount.Value);
-                float shootAmount = Mathf.Clamp01(WildsMistlandsShootAmount.Value);
+                float shootAmount = Mathf.Max(1f, WildsMistlandsShootAmount.Value);
 
                 int stripped = 0, lightened = 0;
                 foreach (var veg in vanillaVegetationSnapshot)
                 {
                     if (veg == null || (veg.m_biome & WildsLandBiomes) == 0) continue;
                     string name = veg.m_prefab ? veg.m_prefab.name : veg.m_name;
+                    if (WildsProgressionPrefabs.Contains(name)) continue;
 
                     float lightAmount = WildsMistlandsRockPrefabs.Contains(name) ? rockAmount
                                       : WildsMistlandsShootPrefabs.Contains(name) ? shootAmount : -1f;
@@ -526,7 +533,8 @@ namespace RtDBiomes
                     if (veg == null || !veg.m_enable || (veg.m_biome & WildsLandBiomes) != Biome.Mistlands) continue;
                     string name = veg.m_prefab ? veg.m_prefab.name : veg.m_name;
                     if (WildsMistlandsRockPrefabs.Contains(name) || WildsMistlandsShootPrefabs.Contains(name) ||
-                        WildsKeepVanillaPrefabs.Contains(name) || name.StartsWith("giant_") || name == "MistArea" || name == "MistArea_edge") continue;
+                        WildsKeepVanillaPrefabs.Contains(name) || WildsProgressionPrefabs.Contains(name) ||
+                        name.StartsWith("giant_") || name == "MistArea" || name == "MistArea_edge") continue;
                     veg.m_maxTilt = Mathf.Max(veg.m_maxTilt, slope);
                     veg.m_maxTerrainDelta = Mathf.Max(veg.m_maxTerrainDelta, delta);
                     relaxed++;
@@ -564,7 +572,7 @@ namespace RtDBiomes
                     var biomeSettings = WildsSettingsFor(land);
                     if (biomeSettings.Length == 0) continue;
                     string name = veg.m_prefab ? veg.m_prefab.name : veg.m_name;
-                    if (WildsKeepVanillaPrefabs.Contains(name)) continue;
+                    if (WildsKeepVanillaPrefabs.Contains(name) || WildsProgressionPrefabs.Contains(name)) continue;
 
                     if (!wildsOriginalLimits.TryGetValue(veg, out var limits))
                     {
